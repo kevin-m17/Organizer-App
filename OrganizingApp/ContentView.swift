@@ -16,31 +16,44 @@ struct ContentView: View {
     @ObservedObject var settings = UserSettings()
     var body: some View {
         NavigationView {
-            VStack(spacing: 25) {
-                NavigationLink(destination: DetailView()) {
-                    Text("To Do List")
-                    .frame(minWidth: 0, maxWidth: 500, minHeight: 0, maxHeight: 100)
-                    .background(Color.yellow)
-                    .foregroundColor(.black)
-                }
-                
-                NavigationLink(destination: DetailView1()) {
-                    Text("Optimal Wake Up Time")
-                    .frame(minWidth: 0, maxWidth: 400, minHeight: 0, maxHeight: 100)
-                    .padding(10)
-                    .background(Color.yellow)
-                    .foregroundColor(.black)
-                }
-                
-                NavigationLink(destination: DetailView2()) {
-                    Text("Finances")
-                    .frame(minWidth: 0, maxWidth: 400, minHeight: 0, maxHeight: 100)
-                    .padding(10)
-                    .background(Color.yellow)
-                    .foregroundColor(.black)
+            ZStack {
+                VStack(spacing: 25) {
+                    NavigationLink(destination: DetailView()) {
+                        Text("To Do List").font(Font.system(size: 24, design: .serif))
+                            .frame(width: 300, height: 100)
+                            .cornerRadius(40)
+                            .foregroundColor(.black)
+                            .background(Color.secondary)
+                            .clipShape(Ellipse())
+                        .padding(10)
+                    }
+
+                    NavigationLink(destination: DetailView1()) {
+                        Text("Ride Splitter").font(Font.system(size: 24, design: .serif))
+                                .frame(width: 300, height: 100)
+                                .cornerRadius(40)
+                                .foregroundColor(.black)
+                                .background(Color.red)
+                                .clipShape(Ellipse())
+                            .padding(10)
+                    }
+
+                    NavigationLink(destination: DetailView2()) {
+//                        Text("Sleep Scheduler").fontWeight(.bold)
+                        Text("Sleep Scheduler").font(Font.system(size: 24, design: .serif))
+                                .frame(width: 300, height: 100)
+                                .cornerRadius(40)
+                                .foregroundColor(.black)
+                                .background(Color.blue)
+                                .clipShape(Ellipse())
+                            .padding(10)
+                    }
                 }
             }
             .navigationBarTitle("Organizer App", displayMode: .inline)
+            .background(
+            Image("water")
+            )
         }
         
     }
@@ -55,15 +68,15 @@ struct DetailView: View {
     var body: some View{
         NavigationView {
             VStack {
-                Text("Do more.")
-                TextField("Tasks", text: $task, onCommit: addTask)
+                Text("Do more.").font(Font.system(size: 30, design: .serif))
+                TextField("Enter Task", text: $task, onCommit: addTask)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 List(settings.arr, id: \.self) {
                     Text($0)
                 }
             }
-        } .navigationBarTitle ("To Do", displayMode: .inline)
+        } .navigationBarTitle ("To Do List", displayMode: .inline)
     }
     
     func addTask() {
@@ -92,35 +105,41 @@ struct DetailView1: View {
     
     var body: some View {
         
-        VStack {
-            Form {
-                Section {
-                    TextField("Total Ride Cost", text: $totalAmount)
-                }
-                
-                Section(header: Text("Total Passengers")) {
-                    Picker("Total Passengers", selection: $selectedP) {
-                        ForEach(0 ..< numbers.count) {
-                            Text("\(self.numbers[$0])")
+        NavigationView {
+            ZStack {
+                VStack {
+                    Form {
+                        Section {
+                            TextField("Total Ride Cost", text: $totalAmount)
+                        }
+                        
+                        Section(header: Text("Total Passengers")) {
+                            Picker("Total Passengers", selection: $selectedP) {
+                                ForEach(0 ..< numbers.count) {
+                                    Text("\(self.numbers[$0])")
+                                }
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
+                        
+                        Section(header: Text("Tip Percentage")) {
+                            Picker("Tip Percent", selection: $selectedT) {
+                                ForEach(0 ..< tipPercent.count) {
+                                    Text("\(self.tipPercent[$0]) %")
+                                }
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
+                        
+                        Section(header: Text("Amount I Pay")) {
+                            Text("\(myPay, specifier: "%.2f")")
                         }
                     }
-                    .pickerStyle(SegmentedPickerStyle())
-                }
-                
-                Section(header: Text("Tip Percentage")) {
-                    Picker("Tip Percent", selection: $selectedT) {
-                        ForEach(0 ..< tipPercent.count) {
-                            Text("\(self.tipPercent[$0]) %")
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                }
-                
-                Section(header: Text("Amount I Pay")) {
-                    Text("\(myPay, specifier: "%.2f")")
                 }
             }
         }
+        .navigationBarTitle ("Ride Splitting Calculator", displayMode: .inline)
+//        Color(red: 239 / 255, green: 235 / 255, blue: 108 / 255)
     }
 }
 
